@@ -10,7 +10,7 @@ var app = app || {};
 	// The DOM element for a todo item...
 	app.TodoView = Backbone.View.extend({
 		//... is a list tag.
-		tagName:  'li',
+		tagName: 'li',
 
 		// Cache the template function for a single item.
 		template: _.template($('#item-template').html()),
@@ -21,6 +21,7 @@ var app = app || {};
 			'dblclick label': 'edit',
 			'click .destroy': 'clear',
 			'click .edit-btn': 'edit',
+			'click .priority-btn': 'togglePriority',
 			'keypress .edit': 'updateOnEnter',
 			'keydown .edit': 'revertOnEscape',
 			'blur .edit': 'close'
@@ -51,6 +52,7 @@ var app = app || {};
 
 			this.$el.html(this.template(this.model.toJSON()));
 			this.$el.toggleClass('completed', this.model.get('completed'));
+			this.$el.toggleClass('priority',this.model.get('priority'));
 			this.toggleVisible();
 			this.$input = this.$('.edit');
 			return this;
@@ -60,6 +62,10 @@ var app = app || {};
 			this.$el.toggleClass('hidden', this.isHidden());
 		},
 
+		togglePriority: function () {
+			this.model.togglePriority();
+		},
+		
 		isHidden: function () {
 			return this.model.get('completed') ?
 				app.TodoFilter === 'active' :
